@@ -1,0 +1,8 @@
+address: https://test-stand.gb.ru
+path: https://test-stand.gb.ru/api/posts
+path_1: https://test-stand.gb.ru/gateway/login
+browser: chrome
+sleep_time: 2
+login: 'Monica Kunde V'
+password: 'add9b80be1'
+title_post: 'Кунгурская пещера'
