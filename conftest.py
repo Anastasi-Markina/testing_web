@@ -8,23 +8,67 @@ from email_report import sendemail
 import requests
 import logging
 
-with open('testdata.yaml') as f:
-    test_data = yaml.safe_load(f)
-    browser = test_data['browser']
+with open('./testdata.yaml', encoding='utf-8') as f:
+    testdata = yaml.safe_load(f)
+
+with open("config.yaml", "r") as f:
+    data = yaml.safe_load(f)
+    
+@pytest.fixture()
+def token():
+    return get_login()
 
 
-@pytest.fixture(scope='session')
-def browser():
-    if browser == 'firefox':
-        service = Service(executable_path=GeckoDriverManager().install())
-        options = webdriver.FirefoxOptions()
-        driver = webdriver.Firefox(service=service, options=options)
-    else:
-        service = Service(executable_path=ChromeDriverManager().install())
-        options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(service=service, options=options)
-    yield driver
-    driver.quit()
+@pytest.fixture()
+def login():
+    res1 = requests.post(data["path_1"], data={"username": data["username"], "password": data["password"]})
+    return res1.json()["token"]
+
+
+@pytest.fixture()
+def find_id():
+    return 91749
+
+
+@pytest.fixture()
+def title():
+    return "Зимушка зима"
+
+
+@pytest.fixture()
+def description():
+    return "Я люблю зимушку - зиму за эту чистоту на улицах, за веселые игры, за то волшебство, в которое так ве"
+
+@pytest.fixture()
+def select_input_login():
+    return '''//*[@id="login"]/div[1]/label/input'''
+
+
+@pytest.fixture()
+def select_input_password():
+    return '''//*[@id="login"]/div[2]/label/input'''
+
+
+@pytest.fixture()
+def select_input_button():
+    return '''button'''
+
+
+@pytest.fixture()
+def select_error():
+    return '''//*[@id="app"]/main/div/div/div[2]/h2'''
+
+
+@pytest.fixture()
+def select_hello_user():
+    return '''//*[@id="app"]/main/nav/ul/li[3]/a'''
+
+
+@pytest.fixture()
+def site():
+    site_class = Site(testdata['address'])
+    yield site_class
+    site_class.close()
 
 @pytest.fixture(scope='session')
 def send_email():
